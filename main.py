@@ -16,12 +16,22 @@ class Grid:
                 row.append(Cell(x, y))
             self.grid.append(row)
 
+    def ratio(self):
+        walked = 0
+        for x in range(0, self.width):
+            for y in range(0, self.height):
+                walked += 1 if self.grid[x][y].walked else 0
+
+        return walked / (self.width * self.height)
+
     def walk(self):
         # Let's start from position (0, 0) and walk our way through the maze generation process
         self.current = [0, 0]
         self.grid[self.current[0]][self.current[1]].walked = True
 
-        for i in range(0, 5000):
+        for i in range(0, 100000):
+            # print(f"Current ratio: {self.ratio()}")
+
             # Decide on a vertical or horizontal movement
             direction, amplitude = random.choice(['x', 'y']), random.choice([-1, 1])
 
@@ -97,8 +107,16 @@ class Cell:
 
 
 if __name__ == "__main__":
-    grid = Grid(10, 10)
-    grid.show()
-    print("Walking on maze...")
-    grid.walk()
-    grid.show()
+    good_grids = []
+    num_grids_to_gen = 5
+    while num_grids_to_gen > 0:
+        # Generate new grid and try if good
+        grid = Grid(10, 10)
+        grid.walk()
+
+        if grid.ratio() >= 0.6:
+            good_grids.append(grid)
+            num_grids_to_gen -= 1
+            print("Good grid found!")
+            grid.show()
+            print()
