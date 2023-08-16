@@ -201,7 +201,8 @@ class Cell:
             pygame.draw.rect(surface, color=(255, 0, 0), rect=(self.x * CELL_UNIT, self.y * CELL_UNIT, self.x * CELL_UNIT + CELL_UNIT, self.y * CELL_UNIT + CELL_UNIT))
 
     def draw_direction(self, surface):
-        surface.blit(arrow_dirs[self.insert_direction], (self.x * CELL_UNIT, self.y * CELL_UNIT))
+        return
+        # surface.blit(arrow_dirs[self.insert_direction], (self.x * CELL_UNIT, self.y * CELL_UNIT))
 
     def __repr__(self):
         return '0' if self.walkable else '1'
