@@ -4,7 +4,7 @@ import pygame
 pygame.init()
 
 GAME_RES = WIDTH, HEIGHT = 1000, 1000
-CELLS_PER_UNIT = 10
+CELLS_PER_UNIT = 8
 CELL_UNIT = WIDTH / CELLS_PER_UNIT
 FPS = 60
 GAME_TITLE = 'One Maze'
@@ -214,7 +214,7 @@ if __name__ == "__main__":
         num_grids_to_gen = 1
         while num_grids_to_gen > 0:
             # Generate new grid and try if good
-            grid = Grid(10, 10)
+            grid = Grid(CELLS_PER_UNIT, CELLS_PER_UNIT)
             grid.walk()
 
             if grid.ratio() >= 0.6:
