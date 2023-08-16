@@ -82,14 +82,6 @@ class Grid:
                 # Apply movement if valid
                 self.grid[self.current[0] + amplitude][self.current[1]].walked = True
 
-                # Edit walls
-                if amplitude == 1:
-                    self.grid[self.current[0]][self.current[1]].walls.down = 0
-                    self.grid[self.current[0] + amplitude][self.current[1]].walls.up = 0
-                elif amplitude == -1:
-                    self.grid[self.current[0]][self.current[1]].walls.up = 0
-                    self.grid[self.current[0] + amplitude][self.current[1]].walls.down = 0
-
                 # Update direction
                 self.grid[self.current[0]][self.current[1]].insert_direction = (amplitude, 0)
 
@@ -107,14 +99,6 @@ class Grid:
                 # Apply movement if valid
                 self.grid[self.current[0]][self.current[1] + amplitude].walked = True
 
-                # Edit walls
-                if amplitude == 1:
-                    self.grid[self.current[0]][self.current[1]].walls.right = 0
-                    self.grid[self.current[0]][self.current[1] + amplitude].walls.left = 0
-                elif amplitude == -1:
-                    self.grid[self.current[0]][self.current[1]].walls.left = 0
-                    self.grid[self.current[0]][self.current[1] + amplitude].walls.right = 0
-
                 # Update direction
                 self.grid[self.current[0]][self.current[1]].insert_direction = (0, amplitude)
 
@@ -131,31 +115,10 @@ class Grid:
                 self.grid[x][y].draw(surface)
 
 
-class Walls:
-    def __init__(self, cell=None, up=1, right=1, down=1, left=1):
-        self.up = up
-        self.right = right
-        self.down = down
-        self.left = left
-        self.cell = cell
-
-    def draw(self, surface):
-        return  # Disabled
-        if self.up:
-            pygame.draw.line(surface, color=(0, 0, 255), start_pos=(self.cell.x * CELL_UNIT, self.cell.y * CELL_UNIT), end_pos=(self.cell.x * CELL_UNIT + CELL_UNIT, self.cell.y * CELL_UNIT), width=5)
-        if self.down:
-            pygame.draw.line(surface, color=(0, 255, 0), start_pos=(self.cell.x * CELL_UNIT, self.cell.y * CELL_UNIT + CELL_UNIT), end_pos=(self.cell.x * CELL_UNIT + CELL_UNIT, self.cell.y * CELL_UNIT + CELL_UNIT), width=5)
-        if self.left:
-            pygame.draw.line(surface, color=(255, 0, 0), start_pos=(self.cell.x * CELL_UNIT, self.cell.y * CELL_UNIT), end_pos=(self.cell.x * CELL_UNIT, self.cell.y * CELL_UNIT + CELL_UNIT), width=5)
-        if self.right:
-            pygame.draw.line(surface, color=(127, 127, 127), start_pos=(self.cell.x * CELL_UNIT + CELL_UNIT, self.cell.y * CELL_UNIT), end_pos=(self.cell.x * CELL_UNIT + CELL_UNIT, self.cell.y * CELL_UNIT + CELL_UNIT), width=5)
-
-
 class Cell:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.walls = Walls(cell=self)
         self.walked = False
         self.previous_insert_direction = (0, 0)
         self.insert_direction = (0, 0)
@@ -166,9 +129,6 @@ class Cell:
             pygame.draw.rect(surface, color=(255, 255, 255), rect=(self.x * CELL_UNIT, self.y * CELL_UNIT, self.x * CELL_UNIT + CELL_UNIT, self.y * CELL_UNIT + CELL_UNIT))
         else:
             pygame.draw.rect(surface, color=(0, 0, 0), rect=(self.x * CELL_UNIT, self.y * CELL_UNIT, self.x * CELL_UNIT + CELL_UNIT, self.y * CELL_UNIT + CELL_UNIT))
-
-        # Drawing walls
-        self.walls.draw(surface)
 
         # Drawing rows
         self.draw_direction(surface)
