@@ -105,6 +105,9 @@ class Grid:
                 # Set current as new coordinate
                 self.current = [self.current[0], self.current[1] + amplitude]
 
+        self.grid[self.current[0]][self.current[1]].end = True
+        self.grid[self.current[0]][self.current[1]].walked = True
+
     def show(self):
         for row in self.grid:
             print(row)
@@ -120,18 +123,19 @@ class Cell:
         self.x = x
         self.y = y
         self.walked = False
-        self.previous_insert_direction = (0, 0)
+        self.end = False
         self.insert_direction = (0, 0)
 
     def draw(self, surface):
         # Drawing cells
         if self.walked:
             pygame.draw.rect(surface, color=(255, 255, 255), rect=(self.x * CELL_UNIT, self.y * CELL_UNIT, self.x * CELL_UNIT + CELL_UNIT, self.y * CELL_UNIT + CELL_UNIT))
+            self.draw_direction(surface)
         else:
             pygame.draw.rect(surface, color=(55, 55, 55), rect=(self.x * CELL_UNIT, self.y * CELL_UNIT, self.x * CELL_UNIT + CELL_UNIT, self.y * CELL_UNIT + CELL_UNIT))
 
-        # Drawing rows
-        self.draw_direction(surface)
+        if self.end:
+            pygame.draw.rect(surface, color=(255, 0, 0), rect=(self.x * CELL_UNIT, self.y * CELL_UNIT, self.x * CELL_UNIT + CELL_UNIT, self.y * CELL_UNIT + CELL_UNIT))
 
     def draw_direction(self, surface):
         surface.blit(arrow_dirs[self.insert_direction], (self.x * CELL_UNIT, self.y * CELL_UNIT))
