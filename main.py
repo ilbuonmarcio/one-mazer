@@ -101,6 +101,13 @@ class Grid:
 
         return walkable / (self.width * self.height)
 
+    def completion_status(self):
+        for x in range(0, self.width):
+            for y in range(0, self.height):
+                if self.grid[x][y].walkable and not self.grid[x][y].walked:
+                    return False
+        return True
+
     def walk(self):
         # Let's start from position (0, 0) and walk our way through the maze generation process
         self.current = [0, 0]
@@ -201,63 +208,72 @@ class Cell:
 
 
 if __name__ == "__main__":
-    good_grids = []
-    num_grids_to_gen = 1
-    while num_grids_to_gen > 0:
-        # Generate new grid and try if good
-        grid = Grid(10, 10)
-        grid.walk()
+    while True:
+        good_grids = []
+        num_grids_to_gen = 1
+        while num_grids_to_gen > 0:
+            # Generate new grid and try if good
+            grid = Grid(10, 10)
+            grid.walk()
 
-        if grid.ratio() >= 0.6:
-            good_grids.append(grid)
-            num_grids_to_gen -= 1
-            print("Good grid found!")
-            grid.show()
-            print()
+            if grid.ratio() >= 0.6:
+                good_grids.append(grid)
+                num_grids_to_gen -= 1
+                print("Good grid found!")
+                grid.show()
+                print()
 
-    grid = good_grids[0]
+        grid = good_grids[0]
 
-    player = Player(player_image, grid)
-    player_group = pygame.sprite.GroupSingle(player)
+        player = Player(player_image, grid)
+        player_group = pygame.sprite.GroupSingle(player)
 
-    game_ended = False
-    while not game_ended:
-
-        player_dir = (0, 0)
-        # Event handling
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                game_ended = True
-                break
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
+        game_ended = False
+        while True:
+            player_dir = (0, 0)
+            # Event handling
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
                     game_ended = True
                     break
-                if event.key == pygame.K_w:
-                    player_dir = (0, -1)
-                if event.key == pygame.K_s:
-                    player_dir = (0, 1)
-                    print("S")
-                if event.key == pygame.K_a:
-                    player_dir = (-1, 0)
-                if event.key == pygame.K_d:
-                    player_dir = (1, 0)
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        game_ended = True
+                        break
+                    if event.key == pygame.K_w:
+                        player_dir = (0, -1)
+                    if event.key == pygame.K_s:
+                        player_dir = (0, 1)
+                        print("S")
+                    if event.key == pygame.K_a:
+                        player_dir = (-1, 0)
+                    if event.key == pygame.K_d:
+                        player_dir = (1, 0)
 
 
-        # Game logic
-        player.move(player_dir)
+            # Game logic
+            player.move(player_dir)
+            if grid.completion_status():
+                break
+            if player.dead:
+                break
+            if game_ended:
+                break
 
-        # Display update
-        pygame.Surface.fill(window, background_color)
+            # Display update
+            pygame.Surface.fill(window, background_color)
 
-        # Drawing of grid
-        grid.draw(window)
+            # Drawing of grid
+            grid.draw(window)
 
-        # Drawing of player
-        player_group.draw(window)
+            # Drawing of player
+            player_group.draw(window)
 
-        pygame.display.update()
-        clock.tick(FPS)
+            pygame.display.update()
+            clock.tick(FPS)
+
+        if game_ended:
+            break
 
     pygame.quit()
     exit(0)
