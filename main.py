@@ -111,7 +111,7 @@ class Grid:
     def walk(self):
         # Let's start from position (0, 0) and walk our way through the maze generation process
         self.current = [0, 0]
-        self.grid[self.current[0]][self.current[1]].walkable = False
+        self.grid[self.current[0]][self.current[1]].walkable = True
         self.grid[self.current[0]][self.current[1]].walked = True
 
         for i in range(0, 100000):
@@ -219,9 +219,9 @@ if __name__ == "__main__":
             if grid.ratio() >= 0.6:
                 good_grids.append(grid)
                 num_grids_to_gen -= 1
-                print("Good grid found!")
-                grid.show()
-                print()
+                # print("Good grid found!")
+                # grid.show()
+                # print()
 
         grid = good_grids[0]
 
@@ -229,6 +229,7 @@ if __name__ == "__main__":
         player_group = pygame.sprite.GroupSingle(player)
 
         game_ended = False
+        wait_cycles = 60  # Wait one second for showing off blood
         while True:
             player_dir = (0, 0)
             # Event handling
@@ -244,7 +245,6 @@ if __name__ == "__main__":
                         player_dir = (0, -1)
                     if event.key == pygame.K_s:
                         player_dir = (0, 1)
-                        print("S")
                     if event.key == pygame.K_a:
                         player_dir = (-1, 0)
                     if event.key == pygame.K_d:
@@ -253,9 +253,11 @@ if __name__ == "__main__":
 
             # Game logic
             player.move(player_dir)
-            if grid.completion_status():
+            if player.dead or grid.completion_status():
+                wait_cycles -= 1
+            if grid.completion_status() and wait_cycles == 0:
                 break
-            if player.dead:
+            if player.dead and wait_cycles == 0:
                 break
             if game_ended:
                 break
