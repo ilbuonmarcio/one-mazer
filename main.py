@@ -30,7 +30,7 @@ arrow_dirs = {
 
 # Game Values
 
-background_color = (150, 150, 150)  # RGB value
+background_color = (255, 255, 255)  # RGB value
 
 
 class Grid:
@@ -128,7 +128,7 @@ class Cell:
         if self.walked:
             pygame.draw.rect(surface, color=(255, 255, 255), rect=(self.x * CELL_UNIT, self.y * CELL_UNIT, self.x * CELL_UNIT + CELL_UNIT, self.y * CELL_UNIT + CELL_UNIT))
         else:
-            pygame.draw.rect(surface, color=(0, 0, 0), rect=(self.x * CELL_UNIT, self.y * CELL_UNIT, self.x * CELL_UNIT + CELL_UNIT, self.y * CELL_UNIT + CELL_UNIT))
+            pygame.draw.rect(surface, color=(55, 55, 55), rect=(self.x * CELL_UNIT, self.y * CELL_UNIT, self.x * CELL_UNIT + CELL_UNIT, self.y * CELL_UNIT + CELL_UNIT))
 
         # Drawing rows
         self.draw_direction(surface)
